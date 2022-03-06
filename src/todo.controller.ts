@@ -7,12 +7,12 @@ export class TodoController {
 
   @Get('/todos')
   async getTodos() {
-    return  this.todoService.getTodos()
+    return await this.todoService.getTodos()
   }
 
   @Get('/todos/:id')
   async getTodo(@Param('id') id: string) {
-    return this.todoService.getTodo(id)
+    return await  this.todoService.getTodo(id)
   }
 
   @Post('/todos')
@@ -32,7 +32,7 @@ export class TodoController {
       @Body() postData: { title?: string; content?: string; },
   ) {
     const { title, content } = postData;
-    this.todoService.updateTodo(id, title, content)
+    await this.todoService.updateTodo(id, title, content)
   }
 
   @Delete('/todos/:id')
@@ -40,7 +40,7 @@ export class TodoController {
   async deleteTodos(
       @Param('id') id: string,
   ) {
-    this.todoService.deleteTodo(id)
+    await this.todoService.deleteTodo(id)
   }
 
 }

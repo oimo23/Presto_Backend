@@ -18,7 +18,9 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "verify:dredd": "dredd ./doc/api/presto-openapi.yaml localhost:8080 -h \"Accept:application/json\"",
+    "generate": "openapi-generator-cli generate -g typescript-axios -i ./doc/api/presto-openapi.yaml  -o ./gen/presto-api-client -c ./doc/api/openapiConfig.yml"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -33,12 +35,14 @@
     "@nestjs/cli": "^8.0.0",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
+    "@openapitools/openapi-generator-cli": "^2.4.26",
     "@types/express": "^4.17.13",
     "@types/jest": "27.0.2",
     "@types/node": "^17.0.15",
     "@types/supertest": "^2.0.11",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "dredd": "^14.1.0",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
