@@ -9,8 +9,33 @@ datasource db {
 
 model Todo {
   id Int @id @default(autoincrement())
-  title String @db.VarChar(40)
-  content String @db.VarChar(100)
+  title String? @db.VarChar(40)
+  content String? @db.VarChar(100)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
+
+model Users {
+  id Int @id @default(autoincrement())
+  userId String? @db.VarChar(100)
+  name String? @db.VarChar(30)
+  readName String? @db.VarChar(30)
+  email String @db.VarChar(254)
+  comment String? @db.VarChar(1000)  
+  age Int?
+  prefectureId Int? @db.TinyInt
+  preferenceId Int? @db.TinyInt
+  practiceCycleId Int? @db.TinyInt
+  performanceUrl String? @db.VarChar(2048)
+  createdAt DateTime @default(now())
+  updatedAt DateTime? @default(now())
+  deletedAt DateTime? @default(now())
+}
+
+// model Post {
+//   id Int @id @default(autoincrement())
+//   title String
+//   published Boolean @default(true)
+//   authorId Int
+//   author User @relation(fields: [authorId], references: [id])
+// }
