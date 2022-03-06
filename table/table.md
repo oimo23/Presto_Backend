@@ -6,18 +6,18 @@
 ## users
 |項番(No)|カラム名|項目名|データ型|長さ(バイト)|主キー|ユニーク|NotNull|初期値|備考|
 |:----|:----|:----|:----|:----|:----|:----|:----|:----|:----|
-|1|id|ID|INT|\-|〇 |\-|〇|\-|\-|
-|2|name|名前|VARCHAR|30|\-|\-|\-|\-|\-|
-|3|read_name|読み仮名|VARCHAR|30|\-|\-|\-|\-|\-|
-|4|password|パスワード|VARCHAR|100|\-|\-|〇|\-|\-|
-|5|email|Email|VARCHAR|50|\-|\-|〇|\-|\-|
+|1|id|ID|INT|\-|〇|\-|〇|\-|\-|
+|2|user_id|Auth0ID|VARCHAR|30|\-|\-|\-|\-|\-|
+|3|name|名前|VARCHAR|30|\-|\-|\-|\-|\-|
+|4|read_name|読み仮名|VARCHAR|30|\-|\-|\-|\-|\-|
+|5|email|Email|VARCHAR|254|\-|\-|〇|\-|\-|
 |6|comment|自己紹介文|VARCHAR|1000|\-|\-|\-|\-|\-|
 |7|age|年齢|INT|\-|\-|\-|\-|\-|\-|
 |8|prefecture_id|都道府県ID|TINYINT|\-|\-|\-|\-|\-|\-|
 |9|preference_id|嗜好ID|TINYINT|\-|\-|\-|\-|\-|\-|
 |10|practice_cycle_id|練習頻度ID|TINYINT|\-|\-|\-|\-|\-|\-|
-|11|performance_url|演奏動画URL|VARCHAR|200|\-|\-|\-|\-|\-|
-|12|created_at|登録日|DATETIME|\-|\-|\-|\-|\-|\-|
+|11|performance_url|演奏動画URL|VARCHAR|2048|\-|\-|\-|\-|\-|
+|12|created_at|登録日|DATETIME|\-|\-|\-|○|\-|\-|
 |13|updated_at|更新日|DATETIME|\-|\-|\-|\-|\-|\-|
 |14|deleted_at|削除日|DATETIME|\-|\-|\-|\-|\-|\-|
 
@@ -29,7 +29,7 @@
 |2|user_id|ユーザーID|INT|\-|\-|〇|〇|\-|\-|
 |3|image_name|画像名|VARCHAR|100|\-|\-|〇|\-|\-|
 |4|suffix|拡張子|VARCHAR|4|\-|\-|〇|\-|\-|
-|5|created_at|登録日|DATETIME|\-|\-|\-|\-|\-|\-|
+|5|created_at|登録日|DATETIME|\-|\-|\-|○|\-|\-|
 |6|updated_at|更新日|DATETIME|\-|\-|\-|\-|\-|\-|
 |7|deleted_at|削除日|DATETIME|\-|\-|\-|\-|\-|\-|
 
@@ -40,7 +40,7 @@
 |1|id|ID|INT|\-|〇 |\-|〇|\-|\-|
 |2|user_id|ユーザーID|INT|\-|\-|〇|〇|\-|\-|
 |3|partner_id|相手ID|INT|\-|\-|〇|〇|\-|\-|
-|4|created_at|登録日|DATETIME|\-|\-|\-|\-|\-|\-|
+|4|created_at|登録日|DATETIME|\-|\-|\-|○|\-|\-|
 
 
 ## chats
@@ -49,36 +49,36 @@
 |1|id|ID|INT|\-|〇 |\-|〇|\-|\-|
 |2|user_id|ユーザーID|INT|\-|\-|〇|〇|\-|\-|
 |3|partner_id|相手ID|INT|\-|\-|〇|〇|\-|\-|
-|4|messeage|メッセージ|VARCHAR|100|\-|\-|〇|\-|\-|
+|4|messeage|メッセージ|VARCHAR|1000|\-|\-|〇|\-|\-|
 |5|messeage_receipt|既読確認フラグ|INT|\-|\-|\-|〇|0|0=未読、1=既読|
-|6|created_at|登録日|DATETIME|\-|\-|\-|\-|\-|\-|
+|6|created_at|登録日|DATETIME|\-|\-|\-|○|\-|\-|
 |7|updated_at|更新日|DATETIME|\-|\-|\-|\-|\-|\-|
 |8|deleted_at|削除日|DATETIME|\-|\-|\-|\-|\-|\-|
 
 
-## prefectures
+## mst_prefectures
 |項番(No)|カラム名|項目名|データ型|長さ(バイト)|主キー|ユニーク|NotNull|初期値|備考|
 |:----|:----|:----|:----|:----|:----|:----|:----|:----|:----|
 |1|id|ID|INT|\-|〇 |\-|〇|\-|\-|
 |2|prefecture_name|都道府県名|VARCHAR|6|\-|〇|〇|\-|\-|
 
 
-## preferences
+## mst_preferences
 |項番(No)|カラム名|項目名|データ型|長さ(バイト)|主キー|ユニーク|NotNull|初期値|備考|
 |:----|:----|:----|:----|:----|:----|:----|:----|:----|:----|
 |1|id|ID|INT|\-|〇 |\-|〇|\-|\-|
-|2|preference_select|ユーザーID|INT|\-|\-|〇|〇|\-|\-|
-|3|created_at|登録日|DATETIME|\-|\-|\-|\-|\-|\-|
+|2|preference_select|嗜好選択肢|VARCHAR|40|\-|〇|〇|\-|\-|
+|3|created_at|登録日|DATETIME|\-|\-|\-|○|\-|\-|
 |4|updated_at|更新日|DATETIME|\-|\-|\-|\-|\-|\-|
 |5|deleted_at|削除日|DATETIME|\-|\-|\-|\-|\-|\-|
 
 
-## practice_cycles
+## mst_practice_cycles
 |項番(No)|カラム名|項目名|データ型|長さ(バイト)|主キー|ユニーク|NotNull|初期値|備考|
 |:----|:----|:----|:----|:----|:----|:----|:----|:----|:----|
 |1|id|ID|INT|\-|〇 |\-|〇|\-|\-|
-|2|practice_cycle_select|練習頻度|INT|\-|\-|〇|〇|\-|\-|
-|3|created_at|登録日|DATETIME|\-|\-|\-|\-|\-|\-|
+|2|practice_cycle_select|練習頻度|VARCHAR|40|\-|〇|〇|\-|\-|
+|3|created_at|登録日|DATETIME|\-|\-|\-|○|\-|\-|
 |4|updated_at|更新日|DATETIME|\-|\-|\-|\-|\-|\-|
 |5|deleted_at|削除日|DATETIME|\-|\-|\-|\-|\-|\-|
 
@@ -90,7 +90,7 @@
 |2|position_id|担当楽器ID|INT|\-|\-|〇|〇|\-|\-|
 |3|user_id|ユーザーID|INT|\-|\-|〇|〇|\-|\-|
 |4|career_id|歴ID|INT|\-|\-|〇|〇|\-|\-|
-|5|created_at|登録日|DATETIME|\-|\-|\-|\-|\-|\-|
+|5|created_at|登録日|DATETIME|\-|\-|\-|○|\-|\-|
 
 
 ## like_genre_links
@@ -99,7 +99,7 @@
 |1|id|ID|INT|\-|〇 |\-|〇|\-|\-|
 |2|genre_id|担当楽器ID|INT|\-|\-|〇|〇|\-|\-|
 |3|user_id|ユーザーID|INT|\-|\-|〇|〇|\-|\-|
-|4|created_at|登録日|DATETIME|\-|\-|\-|\-|\-|\-|
+|4|created_at|登録日|DATETIME|\-|\-|\-|○|\-|\-|
 
 
 ## like_artist_links
@@ -108,7 +108,7 @@
 |1|id|ID|INT|\-|〇 |\-|〇|\-|\-|
 |2|artist_id|アーティストID|INT|\-|\-|〇|〇|\-|\-|
 |3|user_id|ユーザーID|INT|\-|\-|〇|〇|\-|\-|
-|4|created_at|登録日|DATETIME|\-|\-|\-|\-|\-|\-|
+|4|created_at|登録日|DATETIME|\-|\-|\-|○|\-|\-|
 
 
 ## hope_practice_day_links
@@ -117,10 +117,10 @@
 |1|id|ID|INT|\-|〇 |\-|〇|\-|\-|
 |2|day_of_week_id|曜日ID|INT|\-|\-|〇|〇|\-|\-|
 |3|user_id|ユーザーID|INT|\-|\-|〇|〇|\-|\-|
-|4|created_at|登録日|DATETIME|\-|\-|\-|\-|\-|\-|
+|4|created_at|登録日|DATETIME|\-|\-|\-|○|\-|\-|
 
 
-## potisions
+## mst_potisions
 |項番(No)|カラム名|項目名|データ型|長さ(バイト)|主キー|ユニーク|NotNull|初期値|備考|
 |:----|:----|:----|:----|:----|:----|:----|:----|:----|:----|
 |1|id|ID|INT|\-|〇 |\-|〇|\-|\-|
@@ -130,7 +130,7 @@
 |5|deleted_at|登録日|DATETIME|\-|\-|\-|\-|\-|\-|
 
 
-## careers
+## mst_careers
 |項番(No)|カラム名|項目名|データ型|長さ(バイト)|主キー|ユニーク|NotNull|初期値|備考|
 |:----|:----|:----|:----|:----|:----|:----|:----|:----|:----|
 |1|id|ID|INT|\-|〇 |\-|〇|\-|\-|
@@ -140,7 +140,7 @@
 |5|deleted_at|登録日|DATETIME|\-|\-|\-|\-|\-|\-|
 
 
-## genres
+## mst_genres
 |項番(No)|カラム名|項目名|データ型|長さ(バイト)|主キー|ユニーク|NotNull|初期値|備考|
 |:----|:----|:----|:----|:----|:----|:----|:----|:----|:----|
 |1|id|ID|INT|\-|〇 |\-|〇|\-|\-|
@@ -150,7 +150,7 @@
 |5|deleted_at|登録日|DATETIME|\-|\-|\-|\-|\-|\-|
 
 
-## artists
+## mst_artists
 |項番(No)|カラム名|項目名|データ型|長さ(バイト)|主キー|ユニーク|NotNull|初期値|備考|
 |:----|:----|:----|:----|:----|:----|:----|:----|:----|:----|
 |1|id|ID|INT|\-|〇 |\-|〇|\-|\-|
@@ -160,7 +160,7 @@
 |5|deleted_at|登録日|DATETIME|\-|\-|\-|\-|\-|\-|
 
 
-## day_of_weeks
+## mst_day_of_weeks
 |項番(No)|カラム名|項目名|データ型|長さ(バイト)|主キー|ユニーク|NotNull|初期値|備考|
 |:----|:----|:----|:----|:----|:----|:----|:----|:----|:----|
 |1|id|ID|INT|\-|〇 |\-|〇|\-|\-|
