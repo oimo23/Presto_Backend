@@ -16,24 +16,6 @@ model Todo {
   updatedAt DateTime @default(now())
 }
 
-// リレーションサンプル
-// model Post {
-//   id        Int     @id @default(autoincrement())
-//   title     String
-//   content   String?
-//   published Boolean @default(false)
-//   author    User?   @relation(fields:  [authorId], references: [id])
-//   authorId  Int?
-//   @@unique([authorId, title])
-//   @@index(fields: [title, content], name: "main_index")
-// }
-// model User {
-//   id    Int     @id @default(autoincrement())
-//   email String  @unique
-//   name  String?
-//   posts Post[]
-// }
-
 // ユーザーテーブル
 model Users {
   id Int @id @default(autoincrement())
@@ -42,84 +24,9 @@ model Users {
   readName String? @db.VarChar(30)
   email String @db.VarChar(254)
   comment String? @db.VarChar(1000)  
-  age Int? 
+  age Int?
   mstPrefectures MstPrefectures? @relation(fields: [prefectureId], references: [id])
-  prefectureId Int? @db.TinyInt
-  preferenceId Int? @db.TinyInt
-  practiceCycleId Int? @db.TinyInt
-  performanceUrl String? @db.VarChar(2048)
-  createdAt DateTime @default(now())
-  updatedAt DateTime? @default(now())
-  deletedAt DateTime? @default(now())
-  images Images []
-  likes Likes []
-  chats Chats []
-  // prefectures MstPrefectures []
-  preferences MstPreferences []
-  practiceCycles MstPracticeCycles []
-  positionLinks PositionLinks []
-  likeGenreLinks LikeGenreLinks []
-  likeArtistLinks LikeArtistLinks []
-  hopePracticeDayLinks HopePracticeDayLinks []
-}
-
-// model Users {
-//   id Int @default(autoincrement())
-//   userId String? @db.VarChar(100)
-//   name String? @db.VarChar(30)
-//   readName String? @db.VarChar(30)
-//   email String @db.VarChar(254)
-//   comment String? @db.VarChar(1000)  
-//   age Int?
-//   prefectureId Int @db.TinyInt
-//   preferenceId Int @db.TinyInt
-//   practiceCycleId Int @db.TinyInt
-//   performanceUrl String? @db.VarChar(2048)
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime? @default(now())
-//   deletedAt DateTime? @default(now())
-//   images Images []
-//   likes Likes []
-//   chats Chats []
-//   prefectures MstPrefectures []
-//   preferences MstPreferences []
-//   practiceCycles MstPracticeCycles []
-//   positionLinks PositionLinks []
-//   likeGenreLinks LikeGenreLinks []
-//   likeArtistLinks LikeArtistLinks []
-//   hopePracticeDayLinks HopePracticeDayLinks []
-//   @@id([id,prefectureId,preferenceId,practiceCycleId])
-// }
-
-// 画像テーブル
-model Images {
-  id Int @id @default(autoincrement())
-  user Users? @relation(fields: [userId], references: [id])
-  userId Int
-  imageName String @db.VarChar(100)
-  suffix String @db.VarChar(4)
-  createdAt DateTime @default(now())
-  updatedAt DateTime? @default(now())
-  deletedAt DateTime? @default(now())
-}
-
-// いいねテーブル
-model Likes {
-  id Int @id @default(autoincrement())
-  user Users? @relation(fields: [userId], references: [id])
-  userId Int
-  partnerId Int
-  createdAt DateTime @default(now())
-}
-
-// チャットテーブル
-model Chats {
-  id Int @id @default(autoincrement())
-  user Users? @relation(fields: [userId], references: [id])
-  userId Int
-  partnerId Int
-  message String @db.VarChar(1000)
-  messageConfirmFlag ReadConfirmation @default(UNREAD)
+  prefectureId Int
   createdAt DateTime @default(now())
   updatedAt DateTime? @default(now())
   deletedAt DateTime? @default(now())
@@ -129,117 +36,8 @@ model Chats {
 model MstPrefectures {
   id Int @id @default(autoincrement())
   prefecture_name String @unique @db.VarChar(6)
-  user Users []
+  user Users?
   // user Users? @relation(fields: [id], references: [prefectureId])
-}
-
-// マスタ - 嗜好テーブル
-model MstPreferences {
-  id Int @id @default(autoincrement())
-  preferenceSelect String @unique @db.VarChar(40)
-  user Users? @relation(fields: [id], references: [preferenceId])
-  createdAt DateTime @default(now())
-  updatedAt DateTime? @default(now())
-  deletedAt DateTime? @default(now())
-}
-
-// マスタ - 練習頻度テーブル
-model MstPracticeCycles {
-  id Int @id @default(autoincrement())
-  practiceCycleSelect String @unique @db.VarChar(40)
-  user Users? @relation(fields: [id], references: [practiceCycleId])
-  createdAt DateTime @default(now())
-  updatedAt DateTime? @default(now())
-  deletedAt DateTime? @default(now())
-}
-
-// 中間 - 担当楽器リンクテーブル
-model PositionLinks {
-  id Int @id @default(autoincrement())
-  positionId Int
-  user Users? @relation(fields: [userId], references: [id])
-  userId Int
-  careerId Int @db.TinyInt
-  createdAt DateTime @default(now())
-  mstPositions MstPositions []
-  mstCareers MstCareers []
-}
-
-// 中間 - 好きなジャンルリンクテーブル
-model LikeGenreLinks {
-  id Int @id @default(autoincrement())
-  genreId Int @db.TinyInt
-  user Users? @relation(fields: [userId], references: [id])
-  userId Int
-  createdAt DateTime @default(now())
-  mstGenres MstGenres []
-}
-
-// 中間 - 好きなアーティストリンクテーブル
-model LikeArtistLinks {
-  id Int @id @default(autoincrement())
-  artistId Int
-  user Users? @relation(fields: [userId], references: [id])
-  userId Int
-  createdAt DateTime @default(now())
-  mstArtists MstArtists []
-}
-
-// 中間 - 希望練習曜日リンクテーブル
-model HopePracticeDayLinks {
-  id Int @id @default(autoincrement())
-  dayOfWeekId Int @db.TinyInt
-  user Users? @relation(fields: [userId], references: [id])
-  userId Int
-  createdAt DateTime @default(now())
-  mstDayOfWeeks MstDayOfWeeks []
-}
-
-// マスタ - 担当楽器テーブル
-model MstPositions {
-  id Int @id @default(autoincrement())
-  positionName String @unique @db.VarChar(40)
-  positionLinks PositionLinks? @relation(fields: [id], references: [positionId])
-  createdAt DateTime @default(now())
-  updatedAt DateTime? @default(now())
-  deletedAt DateTime? @default(now())
-}
-
-// マスタ - 楽器歴テーブル
-model MstCareers {
-  id Int @id @default(autoincrement())
-  positionLinks PositionLinks? @relation(fields: [id], references: [careerId])
-  career String @unique @db.VarChar(20)
-  createdAt DateTime @default(now())
-  updatedAt DateTime? @default(now())
-  deletedAt DateTime? @default(now())
-}
-
-// マスタ - ジャンルテーブル
-model MstGenres {
-  id Int @id @default(autoincrement())
-  likeGenreLinks LikeGenreLinks? @relation(fields: [id], references: [genreId])
-  genreName String @unique @db.VarChar(30)
-  createdAt DateTime @default(now())
-  updatedAt DateTime? @default(now())
-  deletedAt DateTime? @default(now())
-}
-
-// マスタ - アーティストテーブル
-model MstArtists {
-  id Int @id @default(autoincrement())
-  likeArtistLinks LikeArtistLinks? @relation(fields: [id], references: [artistId])
-  artistName String @unique @db.VarChar(100)
-  createdAt DateTime @default(now())
-  updatedAt DateTime? @default(now())
-  deletedAt DateTime? @default(now())
-}
-
-// マスタ - 曜日テーブル
-model MstDayOfWeeks {
-  id Int @id @default(autoincrement())
-  hopePracticeDayLinks HopePracticeDayLinks? @relation(fields: [id], references: [dayOfWeekId])
-  dayOfWeek String @db.Char(1) @unique
 }
 
 // チャット未読・既読判定用
