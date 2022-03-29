@@ -7,6 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// TODOテーブルサンプル
 model Todo {
   id Int @id @default(autoincrement())
   title String? @db.VarChar(40)
@@ -15,27 +16,186 @@ model Todo {
   updatedAt DateTime @default(now())
 }
 
-model Users {
+// ユーザーテーブル
+model users {
   id Int @id @default(autoincrement())
-  userId String? @db.VarChar(100)
+  user_id String? @db.VarChar(100)
   name String? @db.VarChar(30)
-  readName String? @db.VarChar(30)
+  read_name String? @db.VarChar(30)
   email String @db.VarChar(254)
   comment String? @db.VarChar(1000)  
   age Int?
-  prefectureId Int? @db.TinyInt
-  preferenceId Int? @db.TinyInt
-  practiceCycleId Int? @db.TinyInt
+  mst_prefecture mst_prefectures? @relation(fields: [prefecture_id], references: [id])
+  prefecture_id Int?
+  mst_preference mst_preferences? @relation(fields: [preference_id], references: [id])
+  preference_id Int?
+  mst_practice_cycle mst_practice_cycles? @relation(fields: [practice_cycle_id], references: [id])
+  practice_cycle_id Int?
   performanceUrl String? @db.VarChar(2048)
-  createdAt DateTime @default(now())
-  updatedAt DateTime? @default(now())
-  deletedAt DateTime? @default(now())
+  created_at DateTime @default(now())
+  updated_at DateTime? @default(now())
+  deleted_at DateTime? @default(now())
+  images images []
+  likes likes []
+  chats chats []
+  position_links position_links []
+  like_genre_links like_genre_links []
+  like_artist_links like_artist_links []
+  hope_practice_day_links hope_practice_day_links []
 }
 
-// model Post {
-//   id Int @id @default(autoincrement())
-//   title String
-//   published Boolean @default(true)
-//   authorId Int
-//   author User @relation(fields: [authorId], references: [id])
-// }
+// 画像テーブル
+model images {
+  id Int @id @default(autoincrement())
+  user users? @relation(fields: [user_id], references: [id])
+  user_id Int
+  image_name String @db.VarChar(100)
+  suffix String @db.VarChar(4)
+  created_at DateTime @default(now())
+  updated_at DateTime? @default(now())
+  deleted_at DateTime? @default(now())
+}
+
+// いいねテーブル
+model likes {
+  id Int @id @default(autoincrement())
+  user users? @relation(fields: [user_id], references: [id])
+  user_id Int
+  partner_id Int
+  created_at DateTime @default(now())
+}
+
+// チャットテーブル
+model chats {
+  id Int @id @default(autoincrement())
+  user users? @relation(fields: [user_id], references: [id])
+  user_id Int
+  partner_id Int
+  message String @db.VarChar(1000)
+  message_confirm_flag ReadConfirmation @default(UNREAD)
+  created_at DateTime @default(now())
+  updated_at DateTime? @default(now())
+  deleted_at DateTime? @default(now())
+}
+
+// マスタ - 都道府県名テーブル
+model mst_prefectures {
+  id Int @id @default(autoincrement())
+  prefecture_name String @unique @db.VarChar(6)
+  user users?
+}
+
+// マスタ - 嗜好テーブル
+model mst_preferences {
+  id Int @id @default(autoincrement())
+  preference_select String @unique @db.VarChar(40)
+  user users?
+  created_at DateTime @default(now())
+  updated_At DateTime? @default(now())
+  deleted_at DateTime? @default(now())
+}
+
+// マスタ - 練習頻度テーブル
+model mst_practice_cycles {
+  id Int @id @default(autoincrement())
+  practice_cycle_select String @unique @db.VarChar(40)
+  user users?
+  created_at DateTime @default(now())
+  updated_at DateTime? @default(now())
+  deleted_at DateTime? @default(now())
+}
+
+// 中間 - 担当楽器リンクテーブル
+model position_links {
+  id Int @id @default(autoincrement())
+  mst_positions mst_positions? @relation(fields: [position_id], references: [id])
+  position_id Int
+  user users? @relation(fields: [user_id], references: [id])
+  user_id Int
+  mst_careers mst_careers? @relation(fields: [career_id], references: [id])
+  career_id Int
+  created_at DateTime @default(now())
+}
+
+// 中間 - 好きなジャンルリンクテーブル
+model like_genre_links {
+  id Int @id @default(autoincrement())
+  mst_genres mst_genres? @relation(fields: [genre_id], references: [id])
+  genre_id Int
+  user users? @relation(fields: [user_id], references: [id])
+  user_id Int
+  created_at DateTime @default(now())
+}
+
+// 中間 - 好きなアーティストリンクテーブル
+model like_artist_links {
+  id Int @id @default(autoincrement())
+  mst_artists mst_artists? @relation(fields: [artist_id], references: [id])
+  artist_id Int
+  user users? @relation(fields: [user_id], references: [id])
+  user_id Int
+  created_at DateTime @default(now())
+}
+
+// 中間 - 希望練習曜日リンクテーブル
+model hope_practice_day_links {
+  id Int @id @default(autoincrement())
+  mst_day_of_weeks mst_day_of_weeks? @relation(fields: [day_of_week_id], references: [id])
+  day_of_week_id Int
+  user users? @relation(fields: [user_id], references: [id])
+  user_id Int
+  created_at DateTime @default(now())
+}
+
+// マスタ - 担当楽器テーブル
+model mst_positions {
+  id Int @id @default(autoincrement())
+  position_links position_links?
+  position_name String @unique @db.VarChar(40)
+  created_at DateTime @default(now())
+  updated_at DateTime? @default(now())
+  deleted_at DateTime? @default(now())
+}
+
+// マスタ - 楽器歴テーブル
+model mst_careers {
+  id Int @id @default(autoincrement())
+  position_links position_links?
+  career String @unique @db.VarChar(20)
+  created_at DateTime @default(now())
+  updated_at DateTime? @default(now())
+  deleted_at DateTime? @default(now())
+}
+
+// マスタ - ジャンルテーブル
+model mst_genres {
+  id Int @id @default(autoincrement())
+  like_genre_links like_genre_links?
+  genre_name String @unique @db.VarChar(30)
+  created_at DateTime @default(now())
+  updated_at DateTime? @default(now())
+  deleted_at DateTime? @default(now())
+}
+
+// マスタ - アーティストテーブル
+model mst_artists {
+  id Int @id @default(autoincrement())
+  like_artist_links like_artist_links?
+  artist_name String @unique @db.VarChar(100)
+  created_at DateTime @default(now())
+  updated_at DateTime? @default(now())
+  deleted_at DateTime? @default(now())
+}
+
+// マスタ - 曜日テーブル
+model mst_day_of_weeks {
+  id Int @id @default(autoincrement())
+  hope_practice_day_links hope_practice_day_links?
+  day_of_week String @db.Char(1) @unique
+}
+
+// チャット未読・既読判定用
+enum ReadConfirmation {
+  UNREAD
+  READ
+}

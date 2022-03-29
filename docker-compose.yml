@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  db:
+  presto-db:
     image: presto-db
     container_name: presto-db
     build: db
@@ -19,5 +19,22 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
     depends_on:
-      db:
+      presto-db:
         condition: service_healthy
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui"
+    ports:
+      - "127.0.0.1:8001:8080"
+    volumes:
+      - ./doc/api/presto-openapi.yaml:/presto-openapi.yaml
+    environment:
+      SWAGGER_JSON: /presto-openapi.yaml
+  swagger-api:
+    image: stoplight/prism:3
+    container_name: "swagger-api"
+    ports:
+      - "127.0.0.1:8002:4010"
+    command: mock -h 0.0.0.0 /presto-openapi.yaml
+    volumes:
+      - ./doc/api/presto-openapi.yaml:/presto-openapi.yaml
