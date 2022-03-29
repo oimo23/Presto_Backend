@@ -8,7 +8,7 @@ async function bootstrap() {
   //Todo originを環境変数で指定できるようにする
   app.enableCors({
     origin: '*',
-    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
+    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
   });
 
   const prestoPrismaClient: PrestoPrismaClient = app.get(PrestoPrismaClient);

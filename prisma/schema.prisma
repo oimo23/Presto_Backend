@@ -16,24 +16,6 @@ model Todo {
   updatedAt DateTime @default(now())
 }
 
-// リレーションサンプル
-// model Post {
-//   id        Int     @id @default(autoincrement())
-//   title     String
-//   content   String?
-//   published Boolean @default(false)
-//   author    User?   @relation(fields:  [authorId], references: [id])
-//   authorId  Int?
-//   @@unique([authorId, title])
-//   @@index(fields: [title, content], name: "main_index")
-// }
-// model User {
-//   id    Int     @id @default(autoincrement())
-//   email String  @unique
-//   name  String?
-//   posts Post[]
-// }
-
 // ユーザーテーブル
 model users {
   id Int @id @default(autoincrement())
