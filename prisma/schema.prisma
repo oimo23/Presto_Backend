@@ -31,7 +31,7 @@ model users {
   preference_id Int?
   mst_practice_cycle mst_practice_cycles? @relation(fields: [practice_cycle_id], references: [id])
   practice_cycle_id Int?
-  performanceUrl String? @db.VarChar(2048)
+  performance_url String? @db.VarChar(2048)
   created_at DateTime @default(now())
   updated_at DateTime? @default(now())
   deleted_at DateTime? @default(now())
