@@ -51,6 +51,12 @@ http://localhost:8001
 docker-compose up swagger-api
 ```
 
+起動後ターミナルなどで以下のコマンドを叩くとモックサーバから`presto-oppenapi.yaml`に記載したサンプルレスポンスが返却される。
+```
+curl -i -X GET "http://localhost:8002/api/users/me" -H "Authorization: Bearer token" 
+```
+※Authorizationヘッダーに適当なBearerトークンを設定する必要があるので注意
+
 ### Swagger通りに実装されているか検証
 
 ```
@@ -61,4 +67,10 @@ yarn verify:dredd
 
 ```
 yarn generate
+```
+
+### yamlをReDocに変換
+
+```
+npx redoc-cli bundle ./doc/api/presto-openapi.yaml -o ./doc/api/presto-openapi.html 
 ```

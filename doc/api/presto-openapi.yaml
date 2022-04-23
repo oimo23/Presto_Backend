@@ -10,126 +10,302 @@ servers:
   - url: 'http://localhost:8002'
     description: MOCK server
 paths:
-  /todos:
+  /api/health-check:
     get:
       tags:
-        - TODO
+        - Util
       description: >
-        全てのTODOを取得する
-      operationId: fetchTodos
+        サーバーのヘルスチェック用エンドポイント
+      operationId: healthCheck
       responses:
         '200':
-          description: 成功レスポンス
+          description: Healty
+  /api/users/me:
+    get:
+      tags:
+        - Users
+      description: >
+        ログインユーザーの情報を取得する
+      operationId: fetchLoginUserInfo
+      responses:
+        '200':
+          description: 取得成功
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TodosResponse'
+                $ref: '#/components/schemas/UserResponse'
+        '401':
+          description: トークンが不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: ユーザー未登録
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: サーバーエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/users:
     post:
       tags:
-        - TODO
+        - Users
       description: >
-        TODOを１件追加する
-      operationId: addTodo
+        ユーザーを新規登録する
+      operationId: registerUser
       requestBody:
-        description: 追加するTODO
+        description: 新規登録するユーザーの情報
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TodoRequest'
+              $ref: '#/components/schemas/RegisterUserRequest'
       responses:
         '201':
-          description: 成功レスポンス
+          description: 登録成功
+        '400':
+          description: リクエストボディが不正
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  id:
-                    type: integer
-                    description: TODO ID.
-                    example: 1
-  /todos/{todoId}:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: トークンが不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: サーバーエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
     get:
       tags:
-        - TODO
-      description: >
-        指定されたTODOIDのTODOを１件返却する
-      operationId: fetchTodo
+        - Users
+      description: |
+        # 概要
+        ユーザーの一覧を取得する。<br>
+        クエリパラメータで取得するユーザーの条件を指定可能。
+        # 詳細仕様
+        - ログインユーザー自身は一覧に含まれない。
+        - 一覧は登録日時(createdAt)の降順で返却される。
+      operationId: fetchOtherUsers
       parameters:
-        - name: todoId
-          in: "path"
-          description: "取得したいTODOのID"
-          required: true
+        - in: query
+          name: keyword
           schema:
-            type: "integer"
-            format: "int64"
-          example: 1
+            type: string
+          description: "好きなアーティスなどのキーワードを指定。自己紹介と好きなジャンル・グループ・アーティストの記載から検索される`,`区切りで複数指定可能"
+        - in: query
+          name: position
+          schema:
+            type: integer
+          description: "`positionsのid`を指定。`,`区切りで複数指定可能"
+        - in: query
+          name: prefecture
+          schema:
+            type: integer
+          description: "`prefecturesのid`を指定。`,`区切りで複数指定可能"
+        - in: query
+          name: minage
+          schema:
+            type: integer
+          description: "取得対象に含める最低年齢"
+        - in: query
+          name: maxage
+          schema:
+            type: integer
+          description: "取得対象に含める最高年齢"
       responses:
         '200':
-          description: 成功レスポンス
+          description: |
+            正常レスポンス。<br>
+            一覧が0件の場合、`users:[]`が返却される。
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Todo'
-    put:
+                $ref: '#/components/schemas/UserListResponse'
+        '400':
+          description: クエリパラメータが不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: トークンが不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: サーバーエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/users/{userId}:
+    get:
       tags:
-        - TODO
+        - Users
       description: >
-        TODOを更新する
-      operationId: updateTodo
+        他ユーザーの詳細情報を取得する
+      operationId: fetchOtherUserDetail
       parameters:
-        - name: todoId
-          in: "path"
-          description: "更新したいTODOのID"
+        - name: userId
+          in: path
+          description: 詳細情報を取得したい他ユーザーのUser ID
           required: true
           schema:
-            type: "integer"
-            format: "int64"
-          example: 1
-      requestBody:
-        description: 更新内容
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/TodoRequest'
+            type: string
       responses:
-        '204':
-          description: 成功レスポンス
-    delete:
-      tags:
-        - TODO
-      description: >
-        TODOを削除する
-      operationId: deleteTodo
-      parameters:
-        - name: todoId
-          in: "path"
-          description: "削除したいTODOのID"
-          required: true
-          schema:
-            type: "integer"
-            format: "int64"
-          example: 1
-      responses:
-        '204':
-          description: 成功レスポンス
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetailResponse'
+        '401':
+          description: トークンが不正
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: パスパラメータで指定したユーザーが存在しない
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: サーバーエラー
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
-    Todo:
-      type: "object"
+    User:
       properties:
-        id:
+        userId:
+          type: "string"
+          example: "auth0|xxxxxxxxxxxxxxxxxxxxxxxxxx"
+        name:
+          type: "string"
+          example: "坂東 町雄"
+        readName:
+          type: "string"
+          example: "ばんどう まちお"
+        age:
+          type: "integer"
+          format: "int64"
+          example: 30
+        image:
+          type: "string"
+          example: "ADjkdagYWJjZGVmZw=="
+          description: base64でエンコードされた画像ファイル
+        positions:
+          type: array
+          items: 
+            $ref: "#/components/schemas/Position"
+          example: 
+            - name: 1
+              career: 1
+            - name: 2
+              career: 2
+        createdAt:
+          type: "string"
+          description: "登録日時"
+          format: "date-time"
+          example: "2022-02-05T17:37:01.910Z"
+        prefectureId:
+          type: "integer"
+          format: "int64"
+          example: 0
+    Position:
+      properties:
+        name:
+          type: "integer"
+          format: "int64"
+          example: 0
+        career:
           type: "integer"
           format: "int64"
           example: 1
-        title:
+    UserDetail:
+      properties:
+        userId:
           type: "string"
-          example: "買い物"
-        content:
+          example: "auth0|xxxxxxxxxxxxxxxxxxxxxxxxxx"
+        name:
           type: "string"
-          example: "今日の帰りに夕食の材料を買う"
+          example: "坂東 町雄"
+        readName:
+          type: "string"
+          example: "ばんどう まちお"
+        age:
+          type: "integer"
+          format: "int64"
+          example: 30
+        images:
+          type: "array"
+          example: 
+            - "ADjkdagYWJjZGVmZw=="
+            - "dagadfaYWJjZGVmZw=="
+            - "kluljlkYWJjZGVmZw=="
+            - "yujlkpDYWJjZGVmZw=="
+          description: base64でエンコードされた画像ファイル
+        positions:
+          type: array
+          items: 
+            $ref: "#/components/schemas/Position"
+          example: 
+            - name: 0
+              career: 1
+            - name: 1
+              career: 2
+        comment:
+          type: "string"
+          example: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat."
+        prefectureId:
+          type: "integer"
+          format: "int64"
+          example: 0
+        preferenceId:
+          type: "integer"
+          format: "int64"
+          example: 0
+        practiceCycleId:
+          type: "integer"
+          format: "int64"
+          example: 0
+        performanceUrl:
+          type: "string"
+          example: "https://youtube.com/abcd~"
+        likeGenres:
+          type: "array"
+          example: 
+            - パンク
+            - メロコア
+            - J-ROCK
+        likeArtists:
+          type: "array"
+          example: 
+            - The Crash
+            - The Sex Pistols
+            - Siouxsie & The Banshees
+        hopePracticeDays:
+          type: "array"
+          example: 
+            - 6
+            - 7
         createdAt:
           type: "string"
           description: "登録日時"
@@ -140,38 +316,97 @@ components:
           description: "更新日時"
           format: "date-time"
           example: "2022-02-05T17:37:01.910Z"
-    TodosResponse:
+    RegisterUserRequest:
       type: "object"
+      required:
+        - name
+        - readName
+        - age
+        - positions
+        - prefecture
       properties:
-        todos: 
-          type: "array"
+        name:
+          type: "string"
+          example: "坂東 町雄"
+          minLength: 1
+          maxLength: 30
+        readName:
+          type: "string"
+          example: "ばんどう まちお"
+          minLength: 1
+          maxLength: 30
+        age:
+          type: "integer"
+          format: "int64"
+          example: 30
+          minimum: 1
+          maximum: 100
+        positions:
+          type: array
+          minItems: 1
+          maxItems: 5
           items: 
-            $ref: "#/components/schemas/Todo"
-          example:
-            - "id": 3
-              "title": "ゴミ出し"
-              "content": "次の火曜日は燃えないゴミの日なので忘れないように"
-              "createdAt": "2022-02-05T17:37:01.910Z"
-              "updatedAt": "2022-02-05T17:37:01.910Z"
-            - "id": 2
-              "title": "勉強"
-              "content": "TOEICの勉強を１時間やる"
-              "createdAt": "2022-02-05T17:37:01.910Z"
-              "updatedAt": "2022-02-05T17:37:01.910Z"
-            - "id": 1
-              "title": "買い物"
-              "content": "今日の帰りに夕食の材料を買う"
-              "createdAt": "2022-02-05T17:37:01.910Z"
-              "updatedAt": "2022-02-05T17:37:01.910Z"
-    TodoRequest:
+            $ref: "#/components/schemas/Position"
+          example: 
+            - name: "ドラム"
+              career: 1
+            - name: "キーボード"
+              career: 2
+        prefectureId:
+          type: "integer"
+          format: "int64"
+          example: 0
+          minimum: 1
+          maximum: 47
+    UserResponse:
+      type: "object"
+      $ref: "#/components/schemas/User"
+    UserListResponse:
       type: "object"
       properties:
-        title:
+        users:
+          type: array
+          items: 
+            $ref: "#/components/schemas/User"
+          example: 
+            - "userId": auth0|yyyyyyyyyyyyyyyyyyyyyyyyyy
+              "name": "田中 太郎"
+              "readName": "たなか たろう"
+              "age": 21
+              "image": "ADjkdagYWJjZGVmZw=="
+              "positions": 
+                - name: "ギター"
+                  career: 3
+              "createdAt": "2022-02-05T17:37:01.910Z"
+            - "userId": auth0|zzzzzzzzzzzzzzzzzzzzzzzzzz
+              "name": "鈴木 次郎"
+              "readName": "すずき じろう"
+              "age": 40
+              "image": "BdvadfdarYWJjZGVmZw=="
+              "positions": 
+                - name: "ベース"
+                  career: 2
+                - name: "ボーカル"
+                  career: 1
+              "createdAt": "2022-02-04T17:37:01.910Z"
+            - "userId": auth0|aaaaaaaaaaaaaaaaaaaaaaaaaa
+              "name": "佐々木 町子"
+              "readName": "ささき まちこ"
+              "age": 18
+              "image": "CdadrerYWJjZGVmZw=="
+              "positions": 
+                - name: "ボーカル"
+                  career: 1
+              "createdAt": "2022-02-03T17:37:01.910Z"
+    UserDetailResponse:
+      type: "object"
+      $ref: "#/components/schemas/UserDetail"
+    ErrorResponse:
+      type: "object"
+      properties:
+        code:
           type: "string"
-          example: "買い物"
-        content:
-          type: "string"
-          example: "今日の帰りに夕食の材料を買う"
+          example: "1009"
   securitySchemes:
     Bearer:
       type: http
