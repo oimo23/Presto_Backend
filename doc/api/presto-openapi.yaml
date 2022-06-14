@@ -200,41 +200,46 @@ components:
         name:
           type: "string"
           example: "坂東 町雄"
-        readName:
-          type: "string"
-          example: "ばんどう まちお"
         age:
           type: "integer"
           format: "int64"
           example: 30
         image:
           type: "string"
-          example: "ADjkdagYWJjZGVmZw=="
-          description: base64でエンコードされた画像ファイル
+          example: "http://s3.amazonaws.com/xxxx"
+          description: AWS S3に保存された画像ファイルのURL
         positions:
           type: array
           items: 
             $ref: "#/components/schemas/Position"
           example: 
-            - name: 1
+            - name: "ギター"
               career: 1
-            - name: 2
+            - name: "ベース"
               career: 2
         createdAt:
           type: "string"
           description: "登録日時"
           format: "date-time"
           example: "2022-02-05T17:37:01.910Z"
-        prefectureId:
-          type: "integer"
-          format: "int64"
-          example: 0
+        prefecture:
+          type: "string"
+          example: "福岡県"
     Position:
       properties:
         name:
+          type: "string"
+          example: "ギター"
+        career:
           type: "integer"
           format: "int64"
-          example: 0
+          example: 1
+    RegisterPosition:
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+          example: 1
         career:
           type: "integer"
           format: "int64"
@@ -247,9 +252,6 @@ components:
         name:
           type: "string"
           example: "坂東 町雄"
-        readName:
-          type: "string"
-          example: "ばんどう まちお"
         age:
           type: "integer"
           format: "int64"
@@ -257,35 +259,31 @@ components:
         images:
           type: "array"
           example: 
-            - "ADjkdagYWJjZGVmZw=="
-            - "dagadfaYWJjZGVmZw=="
-            - "kluljlkYWJjZGVmZw=="
-            - "yujlkpDYWJjZGVmZw=="
-          description: base64でエンコードされた画像ファイル
+            - "http://s3.amazonaws.com/xxxx"
+            - "http://s3.amazonaws.com/yyyy"
+            - "http://s3.amazonaws.com/zzzz"
+          description: AWS S3に保存された画像ファイルのURL
         positions:
           type: array
           items: 
             $ref: "#/components/schemas/Position"
           example: 
-            - name: 0
+            - name: "ギター"
               career: 1
-            - name: 1
+            - name: "ベース"
               career: 2
         comment:
           type: "string"
           example: "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat."
-        prefectureId:
-          type: "integer"
-          format: "int64"
-          example: 0
-        preferenceId:
-          type: "integer"
-          format: "int64"
-          example: 0
-        practiceCycleId:
-          type: "integer"
-          format: "int64"
-          example: 0
+        prefecture:
+          type: "string"
+          example: "演奏を楽しみたい"
+        preference:
+          type: "string"
+          example: "福岡県"
+        practiceCycle:
+          type: "string"
+          example: "1ヶ月に一度"
         performanceUrl:
           type: "string"
           example: "https://youtube.com/abcd~"
@@ -304,8 +302,8 @@ components:
         hopePracticeDays:
           type: "array"
           example: 
-            - 6
-            - 7
+            - 土
+            - 日
         createdAt:
           type: "string"
           description: "登録日時"
@@ -330,11 +328,6 @@ components:
           example: "坂東 町雄"
           minLength: 1
           maxLength: 30
-        readName:
-          type: "string"
-          example: "ばんどう まちお"
-          minLength: 1
-          maxLength: 30
         age:
           type: "integer"
           format: "int64"
@@ -346,11 +339,11 @@ components:
           minItems: 1
           maxItems: 5
           items: 
-            $ref: "#/components/schemas/Position"
+            $ref: "#/components/schemas/RegisterPosition"
           example: 
-            - name: "ドラム"
+            - id: 1
               career: 1
-            - name: "キーボード"
+            - id: 2
               career: 2
         prefectureId:
           type: "integer"
@@ -371,18 +364,16 @@ components:
           example: 
             - "userId": auth0|yyyyyyyyyyyyyyyyyyyyyyyyyy
               "name": "田中 太郎"
-              "readName": "たなか たろう"
               "age": 21
-              "image": "ADjkdagYWJjZGVmZw=="
+              "image": "http://s3.amazonaws.com/yyyy"
               "positions": 
                 - name: "ギター"
                   career: 3
               "createdAt": "2022-02-05T17:37:01.910Z"
             - "userId": auth0|zzzzzzzzzzzzzzzzzzzzzzzzzz
               "name": "鈴木 次郎"
-              "readName": "すずき じろう"
               "age": 40
-              "image": "BdvadfdarYWJjZGVmZw=="
+              "image": "http://s3.amazonaws.com/zzzz"
               "positions": 
                 - name: "ベース"
                   career: 2
@@ -391,9 +382,8 @@ components:
               "createdAt": "2022-02-04T17:37:01.910Z"
             - "userId": auth0|aaaaaaaaaaaaaaaaaaaaaaaaaa
               "name": "佐々木 町子"
-              "readName": "ささき まちこ"
               "age": 18
-              "image": "CdadrerYWJjZGVmZw=="
+              "image": "http://s3.amazonaws.com/aaaa"
               "positions": 
                 - name: "ボーカル"
                   career: 1
