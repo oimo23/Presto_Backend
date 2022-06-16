@@ -1,9 +1,9 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: Sample TODO API
+  title: Presto Backend API
   description: >-
-    TODOリストAPIを使ったOpenAPIのサンプル
+    Presto Backend
 servers:
   - url: 'http://localhost:8080'
     description: LOCAL server

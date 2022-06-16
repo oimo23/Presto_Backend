@@ -1,8 +1,8 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- * Sample TODO API
- * TODOリストAPIを使ったOpenAPIのサンプル
+ * Presto Backend API
+ * Presto Backend
  *
  * The version of the OpenAPI document: 1.0.0
  * 
